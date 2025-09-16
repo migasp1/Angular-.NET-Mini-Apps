@@ -7,4 +7,5 @@ public class User
     public string PasswordHash { get; set; } = default!;
     public string PasswordSalt { get; set; } = default!;
     public string Role { get; set; } = default!;
+    public ICollection<Book>? Books { get; set; }
 }
