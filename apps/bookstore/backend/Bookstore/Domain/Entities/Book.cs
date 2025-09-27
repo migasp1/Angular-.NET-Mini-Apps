@@ -10,5 +10,6 @@ public class Book
     public Isbn? Isbn { get; set; }
     public Money? Price { get; set; }
     public Author? Author { get; set; }
+    public User? User { get; set; }
 
 }

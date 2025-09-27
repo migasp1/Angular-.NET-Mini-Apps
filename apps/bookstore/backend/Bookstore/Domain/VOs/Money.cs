@@ -9,9 +9,9 @@ public record Money
     public decimal Amount { get; }
     public string Currency { get; }
 
-    public Money(decimal price, string currency)
+    public Money(decimal amount, string currency)
     {
-        (Amount, Currency) = ValidateAndGetMoneyFields(price, currency);
+        (Amount, Currency) = ValidateAndGetMoneyFields(amount, currency);
     }
 
     #region Private methods
