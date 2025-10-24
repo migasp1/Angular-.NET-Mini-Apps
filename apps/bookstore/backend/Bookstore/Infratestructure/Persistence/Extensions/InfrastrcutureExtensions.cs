@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bookstore.API.Configurations.Auth.JWTConfigurations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -9,6 +10,7 @@ public static class InfrastrcutureExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
         services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
 
         services.AddDbContext<BookStoreDbContext>((provider, options) =>
