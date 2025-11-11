@@ -17,8 +17,6 @@ public static class InfrastrcutureExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        Console.WriteLine("yes");
-
         services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
         services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
 
