@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Migration : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,6 @@ namespace Infrastructure.Migrations
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -47,7 +46,9 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshTokenHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiricyDate = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -87,21 +88,21 @@ namespace Infrastructure.Migrations
                 name: "RoleUser",
                 columns: table => new
                 {
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    RolesRoleId = table.Column<int>(type: "int", nullable: false),
+                    UsersUserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleUser", x => new { x.RoleId, x.UserId });
+                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesRoleId, x.UsersUserId });
                     table.ForeignKey(
-                        name: "FK_RoleUser_Role_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_RoleUser_Role_RolesRoleId",
+                        column: x => x.RolesRoleId,
                         principalTable: "Role",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleUser_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_RoleUser_Users_UsersUserId",
+                        column: x => x.UsersUserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -125,9 +126,9 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleUser_UserId",
+                name: "IX_RoleUser_UsersUserId",
                 table: "RoleUser",
-                column: "UserId");
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

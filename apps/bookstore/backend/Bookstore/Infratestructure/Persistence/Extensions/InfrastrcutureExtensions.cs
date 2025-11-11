@@ -1,4 +1,11 @@
-﻿using Bookstore.API.Configurations.Auth.JWTConfigurations;
+﻿using Application.CQRS;
+using Application.CQRS.Interfaces;
+using Application.Handlers.Users.Profiles;
+using Application.Handlers.Users.RegisterUser;
+using Application.Interfaces;
+using Bookstore.API.Configurations.Auth.JWTConfigurations;
+using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +17,8 @@ public static class InfrastrcutureExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        Console.WriteLine("yes");
+
         services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
         services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
 
@@ -29,5 +38,20 @@ public static class InfrastrcutureExtensions
                 // Add another provider in the future if I'm feeling excentric
             }
         });
+
+        services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+
+        // Register the services 
+        services.AddScoped<ICryptographyService, CryptographyService>();
+
+        // Register mappings 
+        services.AddScoped<IUserMappings, UserMappings>();
+
+        // Register the repos
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+
+        // Register the commands (could be implemented with scanning, but for sake of simplicity, I chose this approach)
+        services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserCommandHandler>();
     }
 }

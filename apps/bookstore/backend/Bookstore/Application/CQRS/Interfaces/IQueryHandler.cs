@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers;
+﻿namespace Application.CQRS.Interfaces;
 
 public interface IQueryHandler<TQuery, TResult>
 {

@@ -12,4 +12,7 @@ public static class DomainErrorCodes
     public const string PasswordTooLong = "PASSWORD_TOO_LONG";
     public const string InvalidPasswordFormat = "INVALID_PASSWORD_FORMAT";
     public const string InvalidRole = "INVALID_ROLE";
+    public const string InvalidUserIdData = "INVALID_USER_ID_DATA";
+    public const string UserNotAuthenticated = "USER_NOT_AUTHENTICATED";
+    public const string EmailAlreadyExists = "Email_ALREADY_EXISTS";
 }

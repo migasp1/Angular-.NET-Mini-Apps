@@ -36,7 +36,6 @@ public class JWTTokenGeneratorService(IOptions<JWTSettings> jwtConfigs, ICryptog
     }
 
 
-
     #region Private methods
 
     private Claim[] GetClaims(User user)
@@ -47,7 +46,7 @@ public class JWTTokenGeneratorService(IOptions<JWTSettings> jwtConfigs, ICryptog
             new(JwtRegisteredClaimNames.Email, user.Email!),
         };
 
-        claims.AddRange(user.Role!.Select(r => new Claim(ClaimTypes.Role, r.Name)));
+        claims.AddRange(user.Roles!.Select(r => new Claim(ClaimTypes.Role, r.Name)));
 
         return [.. claims];
     }

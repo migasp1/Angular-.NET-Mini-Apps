@@ -1,4 +1,5 @@
-﻿using Application.Handlers.Users;
+﻿using Application.CQRS.Interfaces;
+using Application.Handlers.Users.RegisterUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,14 +7,15 @@ namespace Bookstore.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controler]")]
-    public class UsersController : ControllerBase
+    [Route("api/[controller]")]
+    public class UsersController(ICommandDispatcher commandDispatcher) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register(RegisterUserCommand command)
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
-            return NoContent(); //TODO
+            await commandDispatcher.DispatchCommand(command);
+            return NoContent();
         }
     }
 }

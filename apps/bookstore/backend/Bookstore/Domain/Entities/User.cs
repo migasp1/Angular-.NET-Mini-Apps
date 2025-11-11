@@ -6,6 +6,8 @@ public class User
     public string? Email { get; set; }
     public string PasswordHash { get; set; } = default!;
     public string PasswordSalt { get; set; } = default!;
-    public ICollection<Role>? Role { get; set; }
+    public string? RefreshTokenHash { get; set; }
+    public string? RefreshTokenExpiricyDate { get; set; }
+    public ICollection<Role> Roles { get; set; } = [];
     public ICollection<Book>? Books { get; set; }
 }

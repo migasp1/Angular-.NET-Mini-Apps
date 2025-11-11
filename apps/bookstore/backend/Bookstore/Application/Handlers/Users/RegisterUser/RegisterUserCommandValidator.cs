@@ -2,7 +2,7 @@
 using Domain.ErrorCodes;
 using FluentValidation;
 
-namespace Application.Handlers.Users;
+namespace Application.Handlers.Users.RegisterUser;
 
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
@@ -32,12 +32,14 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
                 .WithMessage($"A palavra-passe não pode exceder os {UserConstraints.PasswordMaxLength} caratéres")
                 .WithErrorCode(DomainErrorCodes.PasswordTooLong);
 
-        RuleFor(x => x.Role)
+        RuleFor(x => x.RoleNames)
             .NotEmpty()
-                .WithMessage("O papel tem de estar preenchido")
-                .WithErrorCode(DomainErrorCodes.RequiredField)
-            .Must(x => RoleConstraints.AllRoles.Contains(x))
-                .WithMessage("Papel inválido")
-                .WithErrorCode(DomainErrorCodes.InvalidRole);
+            .WithMessage("Tem de indicar pelo menos um papel")
+            .WithErrorCode(DomainErrorCodes.RequiredField);
+        RuleForEach(x => x.RoleNames)
+            .Must(role => RoleConstraints.AllRoles.Contains(role))
+            .WithMessage("Papel inválido")
+            .WithErrorCode(DomainErrorCodes.InvalidRole);
+
     }
 }
