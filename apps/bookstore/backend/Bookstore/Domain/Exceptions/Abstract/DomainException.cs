@@ -1,6 +1,7 @@
 ﻿namespace Domain.Exceptions.Abstract;
 
-public abstract class DomainException(string message, string code) : Exception(message)
+public abstract class DomainException(string message, string domainCode, int statusCode) : Exception(message)
 {
-    public string Code { get; } = code;
+    public string DomainCode { get; } = domainCode;
+    public int StatusCode { get; } = statusCode;
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Constraints;
 
-public class UserConstraints
+public static class UserConstraints
 {
     public const int EmailMaxLength = 200;
     public const int NameMaxLength = 100;
