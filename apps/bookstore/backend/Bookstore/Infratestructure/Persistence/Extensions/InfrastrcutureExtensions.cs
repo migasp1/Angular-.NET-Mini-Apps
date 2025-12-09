@@ -1,7 +1,4 @@
-﻿using Application.CQRS;
-using Application.CQRS.Interfaces;
-using Application.Handlers.Users.Profiles;
-using Application.Handlers.Users.RegisterUser;
+﻿using Application.Handlers.Users.Profiles;
 using Application.Interfaces;
 using Bookstore.API.Configurations.Auth.JWTConfigurations;
 using Infrastructure.Repositories;
@@ -37,7 +34,6 @@ public static class InfrastrcutureExtensions
             }
         });
 
-        services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
         // Register the services 
         services.AddScoped<ICryptographyService, CryptographyService>();
@@ -48,8 +44,5 @@ public static class InfrastrcutureExtensions
         // Register the repos
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-
-        // Register the commands (could be implemented with scanning, but for sake of simplicity, I chose this approach)
-        services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserCommandHandler>();
     }
 }

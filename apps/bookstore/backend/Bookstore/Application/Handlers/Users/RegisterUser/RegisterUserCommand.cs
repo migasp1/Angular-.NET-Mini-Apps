@@ -1,6 +1,8 @@
-﻿namespace Application.Handlers.Users.RegisterUser;
+﻿using Application.CQRS.Interfaces;
 
-public class RegisterUserCommand
+namespace Application.Handlers.Users.RegisterUser;
+
+public class RegisterUserCommand : IBookstoreCommand
 {
     public string? Email { get; set; }
     public string? Password { get; set; }

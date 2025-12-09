@@ -6,7 +6,7 @@ namespace Application.CQRS;
 
 public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispatcher
 {
-    public async Task DispatchCommand<TCommand>(TCommand command)
+    public async Task DispatchCommand<TCommand>(TCommand command) where TCommand : IBookstoreCommand
     {
         var commandValidator = serviceProvider.GetService<IValidator<TCommand>>();
 
