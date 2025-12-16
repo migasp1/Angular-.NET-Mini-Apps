@@ -1,6 +1,6 @@
 ﻿namespace Application.CQRS.Interfaces;
 
-public interface ICommandHandler<TCommand>
+public interface ICommandHandler<TCommand, TResult>
 {
-    Task HandleAsync(TCommand command);
+    Task<TResult> HandleAsync(TCommand command);
 }

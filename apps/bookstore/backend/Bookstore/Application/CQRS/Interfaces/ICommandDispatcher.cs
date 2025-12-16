@@ -2,5 +2,7 @@
 
 public interface ICommandDispatcher
 {
-    Task DispatchCommand<TCommand>(TCommand command) where TCommand : IBookstoreCommand;
+    Task<TResult> DispatchCommand<TCommand, TResult>(TCommand command)
+        where TCommand : IBookstoreCommand<TResult>
+        where TResult : IBookStoreResult;
 }

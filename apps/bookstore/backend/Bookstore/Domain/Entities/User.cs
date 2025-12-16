@@ -7,7 +7,7 @@ public class User
     public string PasswordHash { get; set; } = default!;
     public string PasswordSalt { get; set; } = default!;
     public string? RefreshTokenHash { get; set; }
-    public string? RefreshTokenExpiricyDate { get; set; }
+    public DateTime RefreshTokenExpiricyDate { get; set; }
     public ICollection<Role> Roles { get; set; } = [];
     public ICollection<Book>? Books { get; set; }
 }

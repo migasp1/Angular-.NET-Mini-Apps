@@ -1,5 +1,7 @@
-﻿using Application.CQRS;
+﻿using Application.Commands.Users.AuthenticateUser;
+using Application.CQRS;
 using Application.CQRS.Interfaces;
+using Application.Handlers.Users.AuthenticateUser;
 using Application.Handlers.Users.RegisterUser;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +13,8 @@ public static class ApplicationExtension
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-
-        // Register the commands (could be implemented with scanning, but for sake of simplicity, I chose this approach)
-        services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserCommandHandler>();
+        services.AddScoped<ICommandHandler<RegisterUserCommand, Unit>, RegisterUserCommandHandler>();
+        services.AddScoped<ICommandHandler<AuthenticateUserCommand, AuthenticateUserResult>, AuthenticateUserCommandHandler>();
 
         return services.AddValidatorsFromAssembly(typeof(ApplicationExtension).Assembly);
     }

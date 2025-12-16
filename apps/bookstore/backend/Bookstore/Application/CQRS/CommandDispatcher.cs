@@ -6,7 +6,9 @@ namespace Application.CQRS;
 
 public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispatcher
 {
-    public async Task DispatchCommand<TCommand>(TCommand command) where TCommand : IBookstoreCommand
+    public async Task<TResult> DispatchCommand<TCommand, TResult>(TCommand command)
+        where TCommand : IBookstoreCommand<TResult>
+        where TResult : IBookStoreResult
     {
         var commandValidator = serviceProvider.GetService<IValidator<TCommand>>();
 
@@ -17,9 +19,9 @@ public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispa
         }
 
         var commandType = typeof(TCommand);
-        var handlerType = typeof(ICommandHandler<>).MakeGenericType(commandType);
+        var handlerType = typeof(ICommandHandler<TCommand, TResult>).MakeGenericType(commandType);
         var handler = serviceProvider.GetService(handlerType);
         var handlerMethod = handlerType.GetMethod("HandleAsync");
-        await (Task)handlerMethod!.Invoke(handler, [command!])!;
+        return await (Task<TResult>)handlerMethod!.Invoke(handler, [command!])!;
     }
 }

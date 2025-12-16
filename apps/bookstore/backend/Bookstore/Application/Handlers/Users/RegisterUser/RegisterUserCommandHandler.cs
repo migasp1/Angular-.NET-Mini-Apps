@@ -1,4 +1,5 @@
-﻿using Application.CQRS.Interfaces;
+﻿using Application.CQRS;
+using Application.CQRS.Interfaces;
 using Application.Interfaces;
 using Domain.Exceptions;
 
@@ -7,9 +8,9 @@ namespace Application.Handlers.Users.RegisterUser;
 public class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IUserMappings userMappings
-    ) : ICommandHandler<RegisterUserCommand>
+    ) : ICommandHandler<RegisterUserCommand, Unit>
 {
-    public async Task HandleAsync(RegisterUserCommand command)
+    public async Task<Unit> HandleAsync(RegisterUserCommand command)
     {
         var existingUser = await userRepository.GetUserByEmail(command.Email!);
         if (existingUser is not null)
@@ -18,5 +19,7 @@ public class RegisterUserCommandHandler(
         var mappedUser = userMappings.MapRegisterUserCommandToUser(command);
 
         await userRepository.CreateUser(mappedUser);
+
+        return Unit.Value;
     }
 }

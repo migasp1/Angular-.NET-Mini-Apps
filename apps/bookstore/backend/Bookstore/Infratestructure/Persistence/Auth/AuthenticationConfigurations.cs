@@ -23,7 +23,7 @@ public static class AuthenticationConfigurations
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtConfigs.Issuer,
+                    ValidIssuer = jwtConfigs!.Issuer,
                     ValidAudience = jwtConfigs.Audience,
                     ValidateLifetime = true,
                     RequireExpirationTime = true,

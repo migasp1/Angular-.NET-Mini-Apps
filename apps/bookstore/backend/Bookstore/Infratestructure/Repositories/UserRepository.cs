@@ -15,6 +15,12 @@ public class UserRepository(BookStoreDbContext bookStoreDb) : IUserRepository
 
     public async Task<User?> GetUserByEmail(string userEmail) => await bookStoreDb.Users.SingleOrDefaultAsync(x => x.Email == userEmail);
 
+    public async Task UpdateUser(User user)
+    {
+        bookStoreDb.Update(user);
+        await SaveDbChangesAsync();
+    }
+
     #region Private methods
 
     private async Task SaveDbChangesAsync() => await bookStoreDb.SaveChangesAsync();
