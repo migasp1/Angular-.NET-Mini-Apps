@@ -14,7 +14,7 @@ public static class ApplicationExtension
     {
         services.AddScoped<ICommandDispatcher, CommandDispatcher>();
         services.AddScoped<ICommandHandler<RegisterUserCommand, Unit>, RegisterUserCommandHandler>();
-        services.AddScoped<ICommandHandler<AuthenticateUserCommand, AuthenticateUserResult>, AuthenticateUserCommandHandler>();
+        services.AddScoped<ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>, AuthenticateUserCommandHandler>();
 
         return services.AddValidatorsFromAssembly(typeof(ApplicationExtension).Assembly);
     }

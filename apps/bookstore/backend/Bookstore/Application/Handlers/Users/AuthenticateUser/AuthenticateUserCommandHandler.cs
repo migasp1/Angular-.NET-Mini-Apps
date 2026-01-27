@@ -8,9 +8,9 @@ namespace Application.Handlers.Users.AuthenticateUser;
 public class AuthenticateUserCommandHandler(
     IUserRepository userRepository,
     ICryptographyService cryptographyService,
-    IJWTTokenGeneratorService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserResult>
+    IJWTTokenGeneratorService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>
 {
-    public async Task<AuthenticateUserResult> HandleAsync(AuthenticateUserCommand command)
+    public async Task<AuthenticateUserCommandResult> HandleAsync(AuthenticateUserCommand command)
     {
         var user = await userRepository.GetUserByEmail(command.Email!) ?? throw new UserNotAuthenticatedException("Credenciais inválidas");
 
@@ -27,7 +27,7 @@ public class AuthenticateUserCommandHandler(
 
         await userRepository.UpdateUser(user);
 
-        return new AuthenticateUserResult()
+        return new AuthenticateUserCommandResult()
         {
             JWTToken = jwttoken,
             RefreshToken = refreshToken
