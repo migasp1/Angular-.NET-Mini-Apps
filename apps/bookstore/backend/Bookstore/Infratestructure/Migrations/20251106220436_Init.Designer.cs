@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    [Migration("20250927160601_Initial_Migration")]
-    partial class Initial_Migration
+    [Migration("20251106220436_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -86,9 +86,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("RoleId");
 
                     b.ToTable("Role");
@@ -115,6 +112,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RefreshTokenExpiricyDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshTokenHash")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")
@@ -125,15 +128,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Property<int>("RoleId")
+                    b.Property<int>("RolesRoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UsersUserId")
                         .HasColumnType("int");
 
-                    b.HasKey("RoleId", "UserId");
+                    b.HasKey("RolesRoleId", "UsersUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsersUserId");
 
                     b.ToTable("RoleUser");
                 });
@@ -209,13 +212,13 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Role", null)
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RolesRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsersUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

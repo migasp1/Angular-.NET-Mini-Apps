@@ -11,8 +11,8 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.UserId);
 
-        builder.HasMany(x => x.Role)
-            .WithMany();
+        builder.HasMany(x => x.Roles)
+            .WithMany(x => x.Users);
 
         builder.HasMany(x => x.Books)
            .WithOne(x => x.User);
