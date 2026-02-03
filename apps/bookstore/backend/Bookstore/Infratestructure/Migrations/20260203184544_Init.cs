@@ -48,7 +48,7 @@ namespace Infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RefreshTokenHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshTokenExpiricyDate = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RefreshTokenExpiricyDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    [Migration("20251106220436_Init")]
+    [Migration("20260203184544_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -112,8 +112,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RefreshTokenExpiricyDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("RefreshTokenExpiricyDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RefreshTokenHash")
                         .HasColumnType("nvarchar(max)");

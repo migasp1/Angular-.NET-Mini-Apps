@@ -109,8 +109,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RefreshTokenExpiricyDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("RefreshTokenExpiricyDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RefreshTokenHash")
                         .HasColumnType("nvarchar(max)");

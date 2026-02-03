@@ -12,7 +12,7 @@ public static class ApplicationExtension
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+        services.AddScoped<IBookStoreCommandDispatcher, CommandDispatcher>();
         services.AddScoped<ICommandHandler<RegisterUserCommand, Unit>, RegisterUserCommandHandler>();
         services.AddScoped<ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>, AuthenticateUserCommandHandler>();
 
