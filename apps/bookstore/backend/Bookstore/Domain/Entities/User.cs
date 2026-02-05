@@ -9,5 +9,4 @@ public class User
     public string? RefreshTokenHash { get; set; }
     public DateTime RefreshTokenExpiricyDate { get; set; }
     public ICollection<Role> Roles { get; set; } = [];
-    public ICollection<Book>? Books { get; set; }
 }

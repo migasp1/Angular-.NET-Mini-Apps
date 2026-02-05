@@ -14,9 +14,6 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
         builder.HasMany(x => x.Roles)
             .WithMany(x => x.Users);
 
-        builder.HasMany(x => x.Books)
-           .WithOne(x => x.User);
-
         builder.Property(x => x.Email)
             .HasMaxLength(UserConstraints.EmailMaxLength)
             .IsRequired();
