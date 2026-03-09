@@ -8,7 +8,7 @@ namespace Application.Handlers.Users.AuthenticateUser;
 public class AuthenticateUserCommandHandler(
     IUserRepository userRepository,
     ICryptographyService cryptographyService,
-    IJWTTokenGeneratorService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>
+    IJWTTokenService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>
 {
     public async Task<AuthenticateUserCommandResult> HandleAsync(AuthenticateUserCommand command)
     {
@@ -20,17 +20,16 @@ public class AuthenticateUserCommandHandler(
             throw new UserNotAuthenticatedException("Credenciais inválidas");
 
         var jwttoken = jWTTokenGeneratorService.GenerateJWTToken(user);
-        var refreshToken = jWTTokenGeneratorService.GenerateRefreshToken();
+        var (refreshToken, expirationDate) = jWTTokenGeneratorService.GenerateAndSetRefreshToken();
 
         user.RefreshTokenHash = refreshToken;
-        user.RefreshTokenExpiricyDate = DateTime.UtcNow;
+        user.RefreshTokenExpiricyDate = expirationDate;
 
         await userRepository.UpdateUser(user);
 
         return new AuthenticateUserCommandResult()
         {
-            JWTToken = jwttoken,
-            RefreshToken = refreshToken
+            JWTToken = jwttoken
         };
     }
 }

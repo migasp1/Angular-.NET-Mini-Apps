@@ -37,7 +37,7 @@ public static class InfrastrcutureExtensions
 
         // Register the services 
         services.AddScoped<ICryptographyService, CryptographyService>();
-        services.AddScoped<IJWTTokenGeneratorService, JWTTokenGeneratorService>();
+        services.AddScoped<IJWTTokenService, JWTTokenGeneratorService>();
 
         // Register mappings 
         services.AddScoped<IUserMappings, UserMappings>();

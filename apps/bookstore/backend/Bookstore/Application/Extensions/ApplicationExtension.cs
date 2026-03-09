@@ -1,7 +1,9 @@
 ﻿using Application.Commands.Users.AuthenticateUser;
+using Application.Commands.Users.RefresToken;
 using Application.CQRS;
 using Application.CQRS.Interfaces;
 using Application.Handlers.Users.AuthenticateUser;
+using Application.Handlers.Users.RefreshToken;
 using Application.Handlers.Users.RegisterUser;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,7 @@ public static class ApplicationExtension
         services.AddScoped<IBookStoreCommandDispatcher, CommandDispatcher>();
         services.AddScoped<ICommandHandler<RegisterUserCommand, Unit>, RegisterUserCommandHandler>();
         services.AddScoped<ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>, AuthenticateUserCommandHandler>();
+        services.AddScoped<ICommandHandler<RefreshTokenCommand, AuthenticateUserCommandResult>, RefreshTokenCommandHandler>();
 
         return services.AddValidatorsFromAssembly(typeof(ApplicationExtension).Assembly);
     }

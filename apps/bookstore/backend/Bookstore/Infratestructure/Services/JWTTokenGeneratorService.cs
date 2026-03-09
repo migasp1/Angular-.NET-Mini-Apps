@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Bookstore.API.Configurations.Auth.JWTConfigurations;
 using Domain.Entities;
+using Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +11,9 @@ using System.Text;
 
 namespace Infrastructure.Services;
 
-public class JWTTokenGeneratorService(IOptions<JWTSettings> jwtConfigs, ICryptographyService cryptographyService) : IJWTTokenGeneratorService
+public class JWTTokenGeneratorService(
+    IOptions<JWTSettings> jwtConfigs,
+    IHttpContextAccessor httpContextAccessor) : IJWTTokenService
 {
     public string GenerateJWTToken(User user)
     {
@@ -30,11 +34,45 @@ public class JWTTokenGeneratorService(IOptions<JWTSettings> jwtConfigs, ICryptog
         return tokenHandler.WriteToken(token);
     }
 
-    public string GenerateRefreshToken()
+    public (string, DateTime) GenerateAndSetRefreshToken()
     {
-        return cryptographyService.HashPlainText(Guid.NewGuid().ToString());
+        var expirationDate = DateTime.UtcNow.AddDays(7);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = expirationDate
+        };
+
+        var refreshToken = Guid.NewGuid().ToString();
+        httpContextAccessor.HttpContext!.Response.Cookies.Append("RefreshToken", refreshToken, cookieOptions);
+
+        return (refreshToken, expirationDate);
     }
 
+    public string GetUserEmailFromToken(string token)
+    {
+        var jwtConfigsValue = jwtConfigs.Value;
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfigsValue.Secret)),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
+
+        if (validatedToken is not JwtSecurityToken jwtSecurityToken
+            || jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            throw new InvalidTokenException("Token inválido");
+
+        return principal.FindFirst(ClaimTypes.Email)!.Value;
+    }
 
     #region Private methods
 
