@@ -12,6 +12,7 @@ builder.Services.AddApplication();
 builder.Services.AddPresentation();
 
 builder.Services.AddJWTAuthentication(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 

@@ -8,29 +8,28 @@ namespace Application.Handlers.Users.AuthenticateUser;
 public class AuthenticateUserCommandHandler(
     IUserRepository userRepository,
     ICryptographyService cryptographyService,
-    IJWTTokenGeneratorService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>
+    IJWTTokenService jWTTokenGeneratorService) : ICommandHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>
 {
     public async Task<AuthenticateUserCommandResult> HandleAsync(AuthenticateUserCommand command)
     {
         var user = await userRepository.GetUserByEmail(command.Email!) ?? throw new UserNotAuthenticatedException("Credenciais inválidas");
 
-        var (PasswordHash, PasswordSalt) = cryptographyService.GetPasswordData(command.Password!);
+        var isAuthenticated = cryptographyService.IsValidPassword(command.Password!, user.PasswordHash, user.PasswordSalt);
 
-        if (user.PasswordHash != PasswordHash && user.PasswordSalt != PasswordSalt)
+        if (!isAuthenticated)
             throw new UserNotAuthenticatedException("Credenciais inválidas");
 
         var jwttoken = jWTTokenGeneratorService.GenerateJWTToken(user);
-        var refreshToken = jWTTokenGeneratorService.GenerateRefreshToken();
+        var (refreshToken, expirationDate) = jWTTokenGeneratorService.GenerateAndSetRefreshToken();
 
-        user.RefreshTokenHash = refreshToken;
-        user.RefreshTokenExpiricyDate = DateTime.UtcNow;
+        user.RefreshTokenHash = cryptographyService.HashPlainText(refreshToken);
+        user.RefreshTokenExpiricyDate = expirationDate;
 
         await userRepository.UpdateUser(user);
 
         return new AuthenticateUserCommandResult()
         {
-            JWTToken = jwttoken,
-            RefreshToken = refreshToken
+            JWTToken = jwttoken
         };
     }
 }

@@ -16,4 +16,5 @@ public static class DomainErrorCodes
     public const string UserNotAuthenticated = "COULD_NOT_AUTHENTICATE";
     public const string EmailAlreadyExists = "EMAIL_ALREADY_EXISTS";
     public const string ResourceNotFound = "RESOURCE_NOT_FOUND";
+    public const string InvalidToken = "INVALID_TOKEN";
 }
