@@ -14,15 +14,15 @@ public class AuthenticateUserCommandHandler(
     {
         var user = await userRepository.GetUserByEmail(command.Email!) ?? throw new UserNotAuthenticatedException("Credenciais inválidas");
 
-        var (PasswordHash, PasswordSalt) = cryptographyService.GetPasswordData(command.Password!);
+        var isAuthenticated = cryptographyService.IsValidPassword(command.Password!, user.PasswordHash, user.PasswordSalt);
 
-        if (user.PasswordHash != PasswordHash && user.PasswordSalt != PasswordSalt)
+        if (!isAuthenticated)
             throw new UserNotAuthenticatedException("Credenciais inválidas");
 
         var jwttoken = jWTTokenGeneratorService.GenerateJWTToken(user);
         var (refreshToken, expirationDate) = jWTTokenGeneratorService.GenerateAndSetRefreshToken();
 
-        user.RefreshTokenHash = refreshToken;
+        user.RefreshTokenHash = cryptographyService.HashPlainText(refreshToken);
         user.RefreshTokenExpiricyDate = expirationDate;
 
         await userRepository.UpdateUser(user);

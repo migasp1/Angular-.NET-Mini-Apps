@@ -1,4 +1,5 @@
-﻿using Application.CQRS.Interfaces;
+﻿using Application.Commands.Users.RefresToken;
+using Application.CQRS.Interfaces;
 using Application.Handlers.Users.AuthenticateUser;
 using Application.Handlers.Users.RegisterUser;
 using Microsoft.AspNetCore.Authorization;
@@ -23,16 +24,16 @@ namespace Bookstore.API.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateUserCommand command)
         {
-            var _ = await commandDispatcher.DispatchCommand(command);
-            return NoContent();
+            var actionResult = await commandDispatcher.DispatchCommand(command);
+            return Ok(actionResult.JWTToken);
         }
 
         [AllowAnonymous]
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] RegisterUserCommand command)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
         {
-            var _ = await commandDispatcher.DispatchCommand(command);
-            return NoContent();
+            var actionResult = await commandDispatcher.DispatchCommand(command);
+            return Ok(actionResult.JWTToken);
         }
     }
 }

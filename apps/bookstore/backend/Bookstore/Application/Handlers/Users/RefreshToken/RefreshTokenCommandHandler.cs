@@ -19,7 +19,9 @@ public class RefreshTokenCommandHandler(
         var user = await userRepository.GetUserByEmail(userEmail)
             ?? throw new NotFoundException("Não foi possível encontrar o utilizador");
 
-        var hashedRefreshToken = cryptographyService.HashPlainText(command.ExpiredJWTToken);
+        var refreshTokenFromCookie = jwtTokenGeneratorService.GetRefreshTokenFromHttpHeader();
+
+        var hashedRefreshToken = cryptographyService.HashPlainText(refreshTokenFromCookie);
 
         if (user.RefreshTokenHash != hashedRefreshToken || user.RefreshTokenExpiricyDate <= DateTime.UtcNow)
         {
@@ -29,7 +31,7 @@ public class RefreshTokenCommandHandler(
         var jwttoken = jwtTokenGeneratorService.GenerateJWTToken(user);
         var (refreshToken, expirationDate) = jwtTokenGeneratorService.GenerateAndSetRefreshToken();
 
-        user.RefreshTokenHash = refreshToken;
+        user.RefreshTokenHash = cryptographyService.HashPlainText(refreshToken);
         user.RefreshTokenExpiricyDate = expirationDate;
 
         await userRepository.UpdateUser(user);

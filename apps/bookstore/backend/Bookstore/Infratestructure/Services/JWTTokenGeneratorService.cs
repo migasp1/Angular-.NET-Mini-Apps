@@ -68,7 +68,7 @@ public class JWTTokenGeneratorService(
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
 
         if (validatedToken is not JwtSecurityToken jwtSecurityToken
-            || jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             throw new InvalidTokenException("Token inválido");
 
         return principal.FindFirst(ClaimTypes.Email)!.Value;
@@ -87,6 +87,13 @@ public class JWTTokenGeneratorService(
         claims.AddRange(user.Roles!.Select(r => new Claim(ClaimTypes.Role, r.Name)));
 
         return [.. claims];
+    }
+
+    public string GetRefreshTokenFromHttpHeader()
+    {
+        var cookieRefreshToken = httpContextAccessor.HttpContext!.Request.Cookies["RefreshToken"];
+
+        return cookieRefreshToken ?? throw new UnauthorizedAccessException("Não foi possivel validar o refresh token");
     }
 
     #endregion
